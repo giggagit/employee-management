@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, description, content)">
+		
+	<head th:replace="fragments/header :: content-header(${title}, ${description})">
+		<title>Default Layout Title</title>
+	</head>
+
+	<body>
+		<!-- Navbar -->
+		<footer th:replace="fragments/navbar :: content-navbar">
+			<p>Default Footer</p>
+		</footer>
+        <!-- Content -->
+        <main th:replace="${content}">
+			<p>Default Content</p>
+		</main>
+
+		<!-- Footer -->
+		<footer th:replace="fragments/footer :: content-footer">
+			<p>Default Footer</p>
+		</footer>
+	</body>
+	
+</html>

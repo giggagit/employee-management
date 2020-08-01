@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/default :: layout(~{::title}, ~{::meta}, ~{::main})">	
+	<head>
+        <title>แผนก</title>
+        <meta name="description" content="แผนก">
+	</head>
+	
+	<body>
+		<!-- Content -->
+		<main role="main">
+			<div class="container mt-3">
+				<div class="row">
+					<h1>แผนก</h1>
+				</div>
+				<div class="row" th:if="${!param.isEmpty()}">
+					<!-- Alert Message -->
+					<div class="col">
+						<th:block th:if="${param.error}">
+							<div class="alert alert-danger" role="alert">
+								ขออภัย ข้อมูลไม่ถูกต้อง!
+							</div>
+						</th:block>
+						<th:block th:if="${param.delete}">
+							<div th:if="${param.delete[0] == 'success'}" class="alert alert-success" role="alert">
+								ลบข้อมูลแผนกสำเร็จ!
+							</div>
+							<div th:if="${param.delete[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถลบข้อมูลแผนกตามคำขอ!
+							</div>
+						</th:block>
+						<th:block th:if="${param.edit}">
+							<div th:if="${param.edit[0] == 'success'}" class="alert alert-success" role="alert">
+								แก้ไขข้อมูลแผนกสำเร็จ!
+							</div>
+							<div th:if="${param.edit[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถแก้ไขข้อมูลแผนกตามคำขอ!
+							</div>
+						</th:block>
+						<th:block th:if="${param.add}">
+							<div th:if="${param.add[0] == 'success'}" class="alert alert-success" role="alert">
+								เพิ่มข้อมูลแผนกสำเร็จ!
+							</div>
+							<div th:if="${param.add[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถเพิ่มข้อมูลแผนกตามคำขอ!
+							</div>
+						</th:block>
+					</div>
+				</div>
+				<!-- Department Search -->
+				<form th:action="@{/department/search}" class="form-row" method="GET" th:fragment="content-employee-search">
+					<div class="col-10">
+						<label class="sr-only" for="name">แผนก</label>
+						<input type="text" class="form-control form-control-sm mb-2 mr-sm-2" name="name" placeholder="แผนก" th:value="${param.name} ? ${param.name} : ''" />
+					</div>
+					<div class="col-1">
+						<label class="sr-only" for="submit">ค้นหา</label>
+						<button type="submit" class="btn btn-success mb-2 mr-sm-2 btn-block btn-sm">ค้นหา</button>
+					</div>
+					<div class="col-1">
+						<a class="btn btn-primary mb-2 mr-sm-2 btn-block btn-sm" th:href="@{/department/add}" role="button">เพิ่มข้อมูล</a>
+					</div>
+				</form>
+				<div class="row" th:if="!${pageContent.hasContent()}">
+					<p>ไม่พบข้อมูล</p>
+				</div>
+				<!-- Employee Table -->
+				<table class="table" th:if="${pageContent.hasContent()}">
+					<thead>
+						<tr>
+							<th style="width: 5%">ลำดับ</th>
+							<th style="width: 75%">แผนก</th>
+							<th style="width: 20%"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="department, departmentIndex : ${pageContent.content}">
+							<td th:text="*{departmentIndex.count + (pageContent.size * pageContent.number)}"></td>
+							<td th:text="*{department.name}"></td>
+							<td class="text-center">
+								<a class="btn btn-danger mb-2 mr-sm-2 btn-sm" th:href="@{/department/delete/{id} (id=${department.id})}" role="button">ลบข้อมูล</a>&nbsp;
+								<a class="btn btn-warning mb-2 mr-sm-2 btn-sm" th:href="@{/department/edit/{id} (id=${department.id})}" role="button">แก้ไขข้อมูล</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- Page Navigation -->
+				<div th:replace="fragments/pagenav :: content-pagenav"></div>
+			</div>
+		</main>
+
+		<!-- Footer -->
+		<footer>            
+            <span>Footer</span>
+        </footer>
+	</body>
+
+</html>

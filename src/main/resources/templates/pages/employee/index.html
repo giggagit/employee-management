@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/default :: layout(~{::title}, ~{::meta}, ~{::main})">	
+	<head>
+        <title>ประวัติพนักงาน</title>
+        <meta name="description" content="จัดการประวัติพนักงาน">
+	</head>
+	
+	<body>
+		<!-- Content -->
+		<main role="main">
+			<div class="container mt-3">
+				<div class="row">
+					<h1>ประวัติพนักงาน</h1>
+				</div>
+				<div class="row" th:if="${!param.isEmpty()}">
+					<!-- Alert Message -->
+					<div class="col">
+						<th:block th:if="${param.error}">
+							<div class="alert alert-danger" role="alert">
+								ขออภัย ข้อมูลไม่ถูกต้อง!
+							</div>
+						</th:block>
+						<th:block th:if="${param.delete}">
+							<div th:if="${param.delete[0] == 'success'}" class="alert alert-success" role="alert">
+								ลบข้อมูลพนักงานสำเร็จ!
+							</div>
+							<div th:if="${param.delete[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถลบข้อมูลพนักงานตามคำขอ!
+							</div>
+						</th:block>
+						<th:block th:if="${param.edit}">
+							<div th:if="${param.edit[0] == 'success'}" class="alert alert-success" role="alert">
+								แก้ไขข้อมูลพนักงานสำเร็จ!
+							</div>
+							<div th:if="${param.edit[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถแก้ไขข้อมูลพนักงานตามคำขอ!
+							</div>
+						</th:block>
+						<th:block th:if="${param.add}">
+							<div th:if="${param.add[0] == 'success'}" class="alert alert-success" role="alert">
+								เพิ่มข้อมูลพนักงานสำเร็จ!
+							</div>
+							<div th:if="${param.add[0] == 'error'}" class="alert alert-danger" role="alert">
+								ไม่สามารถเพิ่มข้อมูลพนักงานตามคำขอ!
+							</div>
+						</th:block>
+					</div>
+				</div>
+				<!-- Employee Search -->
+				<form th:action="@{/employee/search}" class="form-row" method="GET" th:fragment="content-employee-search">
+					<div class="col-4">
+						<label class="sr-only" for="firstname">ชื่อ</label>
+						<input type="text" class="form-control form-control-sm mb-2 mr-sm-2" name="firstname" placeholder="ชือ" th:value="${param.firstname} ? ${param.firstname} : ''" />
+					</div>
+					<div class="col-4">
+						<label class="sr-only" for="lastname">นามสกุล</label>
+						<input type="text" class="form-control form-control-sm mb-2 mr-sm-2" name="lastname" placeholder="นามสกุล" th:value="${param.lastname} ? ${param.lastname} : ''" />
+					</div>
+					<div class="col-2">
+						<label class="sr-only" for="gender">เพศ</label>
+						<select class="form-control form-control-sm mb-2 mr-sm-2" name="gender">
+							<option value="">เพศ</option>
+							<option value="MALE" th:selected="${!#strings.isEmpty(param.gender)} ? ${param.gender[0] == 'MALE'}">ชาย</option>
+							<option value="FEMALE" th:selected="${!#strings.isEmpty(param.gender)} ? ${param.gender[0] == 'FEMALE'}">หญิง</option>
+						</select>
+					</div>
+					<div class="col-1">
+						<label class="sr-only" for="submit">ค้นหา</label>
+						<button type="submit" class="btn btn-success mb-2 mr-sm-2 btn-block btn-sm">ค้นหา</button>
+					</div>
+					<div class="col-1">
+						<a class="btn btn-primary mb-2 mr-sm-2 btn-block btn-sm" th:href="@{/employee/add}" role="button">เพิ่มข้อมูล</a>
+					</div>
+				</form>
+				<div class="row" th:if="!${pageContent.hasContent()}">
+					<p>ไม่พบข้อมูล</p>
+				</div>
+				<!-- Employee Table -->
+				<table class="table" th:if="${pageContent.hasContent()}">
+					<thead>
+						<tr>
+							<th style="width: 5%">ลำดับ</th>
+							<th style="width: 25%">ชื่อ</th>
+							<th style="width: 25%">นามกุล</th>
+							<th style="width: 5%">อายุ</th>
+							<th style="width: 5%">เพศ</th>
+							<th style="width: 15%">แผนก</th>
+							<th style="width: 20%"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="employee, employeeIndex : ${pageContent.content}">
+							<td th:text="*{employeeIndex.count + (pageContent.size * pageContent.number)}" class="align-middle"></td>
+							<td th:text="*{employee.firstname}" class="align-middle"></td>
+							<td th:text="*{employee.lastname}" class="align-middle"></td>
+							<td th:text="*{employee.age}" class="align-middle"></td>
+							<td th:text="*{#strings.toString(employee.gender.name()) == 'MALE' ? 'ชาย' : 'หญิง'}" class="align-middle"></td>
+							<td th:text="*{employee.department} ? *{employee.department.name} : 'ไม่พบข้อมูล'" class="align-middle"></td>
+							<td class="text-center">
+								<a class="btn btn-danger mb-2 mr-sm-2 btn-sm" th:href="@{/employee/delete/{id} (id=${employee.id})}" role="button">ลบข้อมูล</a>&nbsp;
+								<a class="btn btn-warning mb-2 mr-sm-2 btn-sm" th:href="@{/employee/edit/{id} (id=${employee.id})}" role="button">แก้ไขข้อมูล</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<!-- Page Navigation -->
+				<div th:replace="fragments/pagenav :: content-pagenav"></div>
+			</div>
+		</main>
+
+		<!-- Footer -->
+		<footer>            
+            <span>Footer</span>
+        </footer>
+	</body>
+
+</html>

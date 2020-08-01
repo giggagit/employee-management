@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/default :: layout(~{::title}, ~{::meta}, ~{::main})">	
+	<head>
+        <title th:text="${state} == 'add' ? 'เพิ่มข้อมูลแผนก' : (${state} == 'edit' ? 'แก้ไขข้อมูลแผนก')">แบบฟอร์มแผนก</title>
+        <meta name="description" th:content="${state} == 'add' ? 'เพิ่มข้อมูลแผนก' : (${state} == 'edit' ? 'แก้ไขข้อมูลแผนก')">
+	</head>
+	
+	<body>
+		<!-- Content -->
+		<main role="main">
+			<div class="container mt-3">
+				<div class="row">
+                    <h1 th:text="${state} == 'add' ? 'เพิ่มข้อมูลแผนก' : (${state} == 'edit' ? 'แก้ไขข้อมูลแผนก')">แบบฟอร์มแผนก</h1>
+				</div>
+                <!-- Employee Form -->
+                <form th:action="${state} == 'add' ? @{/department/add} : (${state} == 'edit' ? @{/department/edit/{id} (id=${department.id})})" th:object="${department}" method="POST">
+					<div class="form-group row mt-3">
+						<label for="name" class="col-2 col-form-label">ชื่อแผนก</label>
+						<div class="col-10">
+						  <input type="text" class="form-control" th:classappend="${#fields.hasErrors('${department.name}')} ? 'is-invalid'" th:field="*{name}">
+						  <div th:if="${#fields.hasErrors('${department.name}')}" class="invalid-feedback" role="alert">
+							ชื่อแผนกไม่ถูกต้อง กรุณาใส่ชื่อแผนก
+						</div>
+						</div>
+					  </div>
+					<div class="row">
+						<div class="col text-right">
+							<a class="btn btn-danger" th:href="@{/department}" role="button">กลับ</a>
+                    		<button type="submit" class="btn btn-primary" th:text="${state} == 'add' ? 'เพิ่ม' : (${state} == 'edit' ? 'แก้ไข')">ตกลง</button>
+						</div>
+					</div>
+                </form>
+			</div>
+		</main>
+		<!-- Footer -->
+		<footer>            
+            <span>Footer</span>
+        </footer>
+	</body>
+
+</html>
