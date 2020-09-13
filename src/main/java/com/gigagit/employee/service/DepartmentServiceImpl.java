@@ -3,14 +3,14 @@ package com.gigagit.employee.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gigagit.employee.model.Department;
 import com.gigagit.employee.repository.DepartmentRepository;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -28,13 +28,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Page<Department> findByName(Pageable pageable, String name) {
-		return departmentRepository.findByName(pageable, name);
-	}
-
-	@Override
-	public Page<Department> findAll(Pageable pageable) {
-		return departmentRepository.findAll(pageable);
+	public Page<Department> findAll(Specification<Department> spec, Pageable pageable) {
+		return departmentRepository.findAll(spec, pageable);
 	}
 
 	@Override
@@ -43,12 +38,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Optional<Department> findByid(long id) {
+	public Optional<Department> findById(long id) {
 		return departmentRepository.findById(id);
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(long id) {
+		// departmentRepository.setNullOnDelete(id);
 		departmentRepository.deleteById(id);
 	}
 

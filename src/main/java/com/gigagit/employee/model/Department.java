@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
@@ -23,7 +24,8 @@ public class Department {
 	@Column(length = 50)
 	private String name;
 
-	@OneToMany(mappedBy = "department", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "department", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.REFRESH })
 	private List<Employee> employees = new ArrayList<>();
 
 	public void addEmployee(Employee employee) {
@@ -34,6 +36,11 @@ public class Department {
 	public void removeEmployee(Employee employee) {
 		this.employees.remove(employee);
 		employee.setDepartment(null);
+	}
+
+	@PreRemove
+	private void preRemove() {
+		employees.forEach(emp -> emp.setDepartment(null));
 	}
 
 	public Long getId() {

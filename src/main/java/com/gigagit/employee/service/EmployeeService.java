@@ -12,11 +12,9 @@ public interface EmployeeService {
 
 	public void save(Employee employee);
 
-	public Page<Employee> findAll(Pageable pageable);
+	public Page<Employee> findAll(Specification<Employee> spec, Pageable pageable);
 
-	public Page<Employee> search(Specification<Employee> spec, Pageable pageable);
-
-	public Optional<Employee> findByid(long id);
+	public Optional<Employee> findById(long id);
 
 	public void deleteById(long id);
 

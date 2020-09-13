@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/default :: layout(~{::title}, ~{::meta}, ~{::main})">	
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/default :: layout(~{::title}, ~{::meta}, ~{::main})">
 	<head>
         <title th:text="${state} == 'add' ? 'เพิ่มข้อมูลพนักงาน' : (${state} == 'edit' ? 'แก้ไขข้อมูลพนักงาน')">แบบฟอร์มพนักงาน</title>
         <meta name="description" th:content="${state} == 'add' ? 'เพิ่มข้อมูลพนักงาน' : (${state} == 'edit' ? 'แก้ไขข้อมูลพนักงาน')">
@@ -116,7 +116,7 @@
 			</div>
 		</main>
 		<!-- Footer -->
-		<footer>            
+		<footer>
             <span>Footer</span>
         </footer>
 	</body>

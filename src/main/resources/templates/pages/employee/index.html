@@ -47,7 +47,7 @@
 					</div>
 				</div>
 				<!-- Employee Search -->
-				<form th:action="@{/employee/search}" class="form-row" method="GET" th:fragment="content-employee-search">
+				<form th:action="@{/employee}" class="form-row" method="GET" th:fragment="content-employee-search">
 					<div class="col-4">
 						<label class="sr-only" for="firstname">ชื่อ</label>
 						<input type="text" class="form-control form-control-sm mb-2 mr-sm-2" name="firstname" placeholder="ชือ" th:value="${param.firstname} ? ${param.firstname} : ''" />
@@ -109,7 +109,7 @@
 		</main>
 
 		<!-- Footer -->
-		<footer>            
+		<footer>
             <span>Footer</span>
         </footer>
 	</body>
